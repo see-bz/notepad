@@ -18,13 +18,14 @@ export const Notepad: FC = () => {
         type="text"
         name="title"
         id="title"
-        placeholder="Title"
+        placeholder="Untitled"
         className="title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         autoComplete="off"
         maxLength={50}
       />
+
       <textarea
         name="notepad"
         id="notepad"

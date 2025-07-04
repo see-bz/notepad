@@ -3,6 +3,8 @@
 :root {
   --font-garamond: "EB Garamond", serif;
   --font-geist-sans: "Geist Sans", sans-serif;
+  --font-body: var(--font-garamond);
+  --font-scale: 1;
 }
 
 html,
@@ -42,17 +44,16 @@ a {
     border: none;
     outline: none;
     width: 100%;
-    padding: 0.5rem 1rem;
   }
 
   .title {
     border-bottom: 1px solid #ccc;
-    font-size: 1.5rem;
+    font-size: calc(var(--font-scale) * 1.5rem);
   }
 
   .notepad {
     height: 75vh;
-    font-size: 1rem;
+    font-size: calc(var(--font-scale) * 1rem);
   }
 }
 
@@ -112,7 +113,9 @@ a {
     margin-bottom: 3.5cm; /* reserve space on paper */
   }
 
-  .note-container *, .container, .container > * {
+  .note-container *,
+  .container,
+  .container > * {
     padding-left: 0 !important;
     padding-right: 0 !important;
     margin-left: 0 !important;

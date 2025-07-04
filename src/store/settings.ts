@@ -1,36 +1,35 @@
+import { FONTS, LIGHT_MODE, TEXT_DIRECTION } from "@/config";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export const FONTS = {
-  EB_Garamond: "EB Garamond",
-  Geist_Sans: "Geist",
-  Arial: "Arial",
-  Times_New_Roman: "Times New Roman",
-  Geist_Mono: "Geist Mono",
-  Monospace: "Monospace",
-};
+export type TFont = keyof typeof FONTS;
+export type TLightMode = keyof typeof LIGHT_MODE;
+export type TTextDirection = keyof typeof TEXT_DIRECTION;
 
-export type TFont = typeof FONTS[keyof typeof FONTS];
+type SettingsState = {
+  mode: TLightMode;
+  setMode: (val: TLightMode) => void;
+  showSettings: boolean;
+  setShowSettings: (val: boolean) => void;
+  spellcheck: boolean;
+  setSpellcheck: (val: boolean) => void;
+  direction: TTextDirection;
+  setDirection: (val: TTextDirection) => void;
+  font: TFont;
+  setFont: (val: TFont) => void;
+  fontScale: number;
+  setFontScale: (val: number) => void;
+  resetSettings: () => void;
+  clearLocalStorage: () => void;
+};
 
 const defaults = {
   mode: "light",
   spellcheck: false,
   direction: "ltr",
-  font: FONTS.EB_Garamond,
-} as const;
-
-type SettingsState = {
-  mode: "light" | "dark";
-  setMode: (val: "light" | "dark") => void;
-  showSettings: boolean;
-  setShowSettings: (val: boolean) => void;
-  spellcheck: boolean;
-  setSpellcheck: (val: boolean) => void;
-  direction: "ltr" | "rtl";
-  setDirection: (val: "ltr" | "rtl") => void;
-  font: TFont;
-  setFont: (val: TFont) => void;
-};
+  font: "EB Garamond",
+  fontScale: 1,
+} as const satisfies Partial<SettingsState>;
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
@@ -45,6 +44,13 @@ export const useSettingsStore = create<SettingsState>()(
       setDirection: (val) => set({ direction: val }),
       font: defaults.font,
       setFont: (val) => set({ font: val }),
+      fontScale: defaults.fontScale,
+      setFontScale: (val) => set({ fontScale: val }),
+      resetSettings: () => set(defaults),
+      clearLocalStorage: () => {
+        localStorage.clear();
+        window.location.reload();
+      },
     }),
     {
       name: "see-notepad-ui", // key in localStorage
@@ -53,6 +59,7 @@ export const useSettingsStore = create<SettingsState>()(
         spellcheck: state.spellcheck,
         direction: state.direction,
         font: state.font,
+        fontScale: state.fontScale,
       }),
     }
   )

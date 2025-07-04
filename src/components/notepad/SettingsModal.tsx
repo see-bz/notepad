@@ -1,4 +1,10 @@
-import { FONTS, TFont, useSettingsStore } from "@/store/settings";
+import { FONTS, LIGHT_MODE, TEXT_DIRECTION } from "@/config";
+import {
+  TFont,
+  TLightMode,
+  TTextDirection,
+  useSettingsStore,
+} from "@/store/settings";
 import { Button, Form, Modal } from "react-bootstrap";
 
 export const SettingsModal = () => {
@@ -13,6 +19,10 @@ export const SettingsModal = () => {
     setDirection,
     font,
     setFont,
+    fontScale,
+    setFontScale,
+    resetSettings,
+    clearLocalStorage,
   } = useSettingsStore();
 
   return (
@@ -25,12 +35,15 @@ export const SettingsModal = () => {
           <Form.Group className="mb-3">
             <Form.Label>Mode</Form.Label>
             <Form.Select
-              onChange={(e) => setMode(e.target.value as "light" | "dark")}
+              onChange={(e) => setMode(e.target.value as TLightMode)}
               defaultValue={mode}
               className="mb-3"
             >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
+              {Object.entries(LIGHT_MODE).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
 
@@ -46,33 +59,55 @@ export const SettingsModal = () => {
           <Form.Group className="mb-3">
             <Form.Label>Writing direction</Form.Label>
             <Form.Select
-              onChange={(e) => setDirection(e.target.value as "ltr" | "rtl")}
+              onChange={(e) => setDirection(e.target.value as TTextDirection)}
               defaultValue={direction}
               className="mb-3"
             >
-              <option value="ltr">Left to right</option>
-              <option value="rtl">Right to left</option>
+              {Object.entries(TEXT_DIRECTION).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Font</Form.Label>
             <Form.Select
-              onChange={(e) =>
-                setFont(e.target.value as TFont)
-              }
+              onChange={(e) => setFont(e.target.value as TFont)}
               defaultValue={font}
               className="mb-3"
             >
               {Object.entries(FONTS).map(([key, value]) => (
-                <option key={key} value={value}>{value}</option>
+                <option key={key} value={key}>
+                  {value}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Font size (x{fontScale})</Form.Label>
+            <Form.Range
+              min={0.5}
+              max={2}
+              step={0.1}
+              value={fontScale}
+              onChange={(e) => setFontScale(e.target.valueAsNumber)}
+            ></Form.Range>
+          </Form.Group>
+
+          <Button variant="warning" onClick={() => resetSettings()}>
+            Reset Settings
+          </Button>
+
+          <Button variant="danger" className="ms-2" onClick={() => clearLocalStorage()}>
+            Clear Local Storage
+          </Button>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={() => setShowSettings(false)}>
+        <Button variant="secondary" onClick={() => setShowSettings(false)}>
           Close
         </Button>
       </Modal.Footer>
